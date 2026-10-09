@@ -9,7 +9,7 @@
 
 struct Seat
 {
-    int id;       /* seat number 1 to 128 */
+    int id; /* seat number 1 to 128 */
     int assigned; /* 0 = empty, 1 = assigned */
     char last[30];
     char first[30];
