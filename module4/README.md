@@ -9,3 +9,7 @@ The program saves the seat data to a text file called reservations.txt. Each lin
 - Cons: The whole file is rewritten every time a seat changes. Names can only be one word, with no spaces. The file name is hardcoded and the program has to be run from the same folder to find it. If someone edits the file by hand incorrectly, the data could load wrong.
 
 4. Screenshots
+<img width="381" height="687" alt="Screenshot 2026-10-09 at 7 41 29 AM" src="https://github.com/user-attachments/assets/584e31ac-e6ff-4317-b8ac-4af0407a6dde" />
+<img width="352" height="586" alt="Screenshot 2026-10-09 at 7 41 38 AM" src="https://github.com/user-attachments/assets/619f1948-0dd2-4425-8d4e-072f64d18213" />
+<img width="392" height="604" alt="Screenshot 2026-10-09 at 7 42 18 AM" src="https://github.com/user-attachments/assets/9de7292f-d24b-43ec-bdd0-a85a09f8725a" />
+
