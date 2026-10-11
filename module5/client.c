@@ -1,105 +1,67 @@
+#include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <arpa/inet.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
+#include <sys/types.h>
 
-#define PORT 8080
-#define MAX_NAME 255
-
-int main(int argc, char *argv[])
+int main(int argc, char const* arg[])
 {
-    const char *ip = "127.0.0.1";
-    char filename[MAX_NAME + 2];
+    // ask the user for the file name
+    char fileName[256];
+    printf("Enter file name: ");
+    if (fgets(fileName, sizeof(fileName), stdin) == NULL) {
+        printf("Error: Could not read file name.\n");
+        return 1;
+    }
+    fileName[strcspn(fileName, "\n")] = '\0';
 
-    if (argc >= 2)
-    {
-        ip = argv[1];
-    }
-    if (argc >= 3)
-    {
-        if (strlen(argv[2]) > MAX_NAME)
-        {
-            fprintf(stderr, "Error: file name too long\n");
-            return 1;
-        }
-        strcpy(filename, argv[2]);
-    }
-    else
-    {
-        printf("Enter file name: ");
-        if (!fgets(filename, sizeof(filename), stdin))
-        {
-            fprintf(stderr, "Error: could not read file name\n");
-            return 1;
-        }
-        filename[strcspn(filename, "\r\n")] = '\0';
-    }
-
-    if (filename[0] == '\0')
-    {
-        fprintf(stderr, "Error: file name is empty\n");
+    if (strlen(fileName) == 0) {
+        printf("Error: File name is empty.\n");
         return 1;
     }
 
-    int fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (fd < 0)
-    {
-        perror("socket");
+    // create client socket
+    int serverSocketID = socket(AF_INET, SOCK_STREAM, 0);
+
+    // define server address
+    struct sockaddr_in serverAddr;
+    serverAddr.sin_family = AF_INET;
+    serverAddr.sin_port = htons(9001);
+    serverAddr.sin_addr.s_addr = INADDR_ANY;
+
+    int connectStatus = connect(serverSocketID, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
+    if (connectStatus == -1) {
+        printf("Error: Could not connect to the server. \n");
         return 1;
     }
 
-    struct sockaddr_in addr;
-    memset(&addr, 0, sizeof(addr));
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(PORT);
-    if (inet_pton(AF_INET, ip, &addr.sin_addr) <= 0)
-    {
-        fprintf(stderr, "Error: invalid server address\n");
-        close(fd);
+    // send the file name to the server
+    send(serverSocketID, fileName, strlen(fileName), 0);
+
+    // receive the response
+    char serverMsg[2100];
+    int total = 0;
+    int n;
+    while ((n = recv(serverSocketID, serverMsg + total, sizeof(serverMsg) - 1 - total, 0)) > 0) {
+        total += n;
+    }
+    serverMsg[total] = '\0';
+    close(serverSocketID);
+
+    if (total == 0) {
+        printf("Error: No response from the server.\n");
         return 1;
     }
 
-    if (connect(fd, (struct sockaddr *)&addr, sizeof(addr)) < 0)
-    {
-        perror("connect");
-        close(fd);
-        return 1;
+    // print the file contents or the error message
+    if (strncmp(serverMsg, "OK\n", 3) == 0) {
+        printf("%s", serverMsg + 3);
+    }
+    else {
+        printf("%s", serverMsg);
     }
 
-    if (send(fd, filename, strlen(filename), 0) < 0)
-    {
-        perror("send");
-        close(fd);
-        return 1;
-    }
-
-    char buf[2048 + 64];
-    size_t total = 0;
-    ssize_t n;
-    while ((n = recv(fd, buf + total, sizeof(buf) - 1 - total, 0)) > 0)
-    {
-        total += (size_t)n;
-        if (total >= sizeof(buf) - 1)
-            break;
-    }
-    buf[total] = '\0';
-    close(fd);
-
-    if (total == 0)
-    {
-        fprintf(stderr, "Error: no response from server\n");
-        return 1;
-    }
-
-    if (strncmp(buf, "OK\n", 3) == 0)
-    {
-        printf("%s", buf + 3);
-        return 0;
-    }
-
-    fprintf(stderr, "%s", buf);
-    return 1;
+    return 0;
 }
