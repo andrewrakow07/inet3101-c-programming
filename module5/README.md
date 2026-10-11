@@ -7,3 +7,6 @@ The server creates a TCP socket on port 8080, binds, listens, and handles one cl
 3. Pros and Cons
 - Pros: the protocol is simple and easy to read, error messages are clear, file name validation blocks path traversal, all three required error cases are handled, and the server shuts down cleanly on Ctrl+C or kill.
 - Cons: the server handles one client at a time, so a slow client blocks others. The file name is read with a single recv(), which assumes it arrives in one piece. The port is fixed and there is no encryption or authentication. It only supports text files, and the “OK” marker is part of the data stream instead of a proper length header.
+
+4. Screenshot
+<img width="1197" height="432" alt="Screenshot 2026-10-11 at 2 17 56 PM" src="https://github.com/user-attachments/assets/2e3868e8-0fee-4351-9e64-787ca96ca3ca" />
