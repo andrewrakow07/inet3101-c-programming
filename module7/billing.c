@@ -93,7 +93,7 @@ void usage_fill(UsageRecord *u, int resource, double v1, double v2)
     }
 }
 
-/* ---------- ledger ---------- */
+/* ledger */
 
 void ledger_init(Ledger *l)
 {
@@ -155,7 +155,7 @@ void ledger_free(Ledger *l)
     l->count = 0;
 }
 
-/* ---------- invoice ---------- */
+/*  invoice  */
 
 /* Check if a time is in the period (YYYY-MM). Empty period matches everything. */
 static int in_period(time_t t, char *period)
@@ -263,7 +263,7 @@ int invoice_write(Invoice *inv, char *path_out, int size)
     return 0;
 }
 
-/* ---------- summary ---------- */
+/* summary */
 
 /* Print one line per account for the period. */
 int summary_print(char *period)
@@ -307,7 +307,7 @@ int summary_print(char *period)
     return 0;
 }
 
-/* ---------- export ---------- */
+/*  export  */
 
 /* Write text in quotes for CSV. A quote inside the text is doubled. */
 static void write_csv_text(FILE *f, char *s)
