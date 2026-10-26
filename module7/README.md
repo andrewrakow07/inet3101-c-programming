@@ -1,6 +1,6 @@
 Cloud Services Billing System (INET 3101 Capstone)
 
-Demo video: 
+Demo video: https://mediaspace.umn.edu/media/t/1_xweudl0b
 
 Problem Statement:
 
