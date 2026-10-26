@@ -35,7 +35,7 @@ static void print_usage_row(UsageRecord *u)
            u->cpu_hours, u->mem_gb_hours, u->storage_gb, u->net_in_mb, u->net_out_mb);
 }
 
-/* ---------- accounts ---------- */
+/*  accounts */
 
 static void create_account(void)
 {
