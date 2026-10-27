@@ -1,1 +1,6 @@
-/* Write the program as per module 1 instructions */
+#include <stdio.h>
+
+int main(void) {
+    printf("Andrew\n");
+    return 0;
+}
